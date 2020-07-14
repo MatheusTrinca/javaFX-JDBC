@@ -81,13 +81,14 @@ public class DepartmentListController implements Initializable{
 	public void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			Pane pane = loader.load();
 			
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormData();
 			
-			// Fazer tipo moda -> criar novo Stage e colocar por cima do atual
-			Pane pane = loader.load();
+			// Fazer tipo modal -> criar novo Stage e colocar por cima do atual
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter department data");
 			dialogStage.setScene(new Scene(pane));
