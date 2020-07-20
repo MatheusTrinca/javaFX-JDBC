@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Seller;
@@ -34,11 +37,23 @@ public class SellerFormController implements Initializable {
 	@FXML
 	private TextField txtName;
 	@FXML
+	private TextField txtEmail;
+	@FXML
+	private DatePicker dpBirthDate;
+	@FXML
+	private TextField txtBaseSalary;
+	@FXML
 	private Label labelErrorName;
 	@FXML
 	private Button btSave;
 	@FXML
 	private Button btCancel;
+	@FXML
+	private Label labelErrorEmail;
+	@FXML
+	private Label labelErrorBirthdate;
+	@FXML
+	private Label labelErrorBaseSalary ;
 	
 	public void setSeller(Seller entity) {
 		this.entity = entity;
@@ -110,6 +125,9 @@ public class SellerFormController implements Initializable {
 	private void initializeNodes(){
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtName, 30);
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		Constraints.setTextFieldMaxLength(txtEmail, 40);
+		Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
 	}
 	
 	public void updateFormData() {
@@ -119,6 +137,12 @@ public class SellerFormController implements Initializable {
 		// converter de inteiro para String, para passar para a caixa de texto
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+		txtEmail.setText(entity.getEmail());
+		txtBaseSalary.setText(String.format(String.format("%.2f", entity.getBaseSalary())));
+		// Pega o fuso horario do sistema de quem estiver usando o computador
+		if(entity.getBirthDate() != null) {
+			dpBirthDate.setValue(LocalDate.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()));
+		}
 	}
 	
 	public void subscribeDataChangeListeners(DataChangeListener listener) {
